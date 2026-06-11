@@ -7,9 +7,6 @@ FROM pangeo/pangeo-notebook AS stage
 ENV NB_GID=100
 USER root
 
-# temporary fix
-RUN pip uninstall --yes pygmt 
-
 #install packages
 RUN apt-get update -qq --yes > /dev/null \
     && apt-get install gmt-dcw gmt-gshhg --yes \
@@ -23,9 +20,8 @@ RUN apt-get update -qq --yes > /dev/null \
 # unminimize to install man-db
 # RUN yes | unminimize
 
-#install gmt and pygmt from conda-forge
-RUN conda install -c conda-forge gmt==6.6.0 --yes && \
-    conda install -c conda-forge pygmt --yes
+#install gmt and pygmt from conda-forge into the notebook environment
+RUN conda install -n notebook -c conda-forge gmt==6.6.0 pygmt --yes
 
 # install taup
 WORKDIR /opt
